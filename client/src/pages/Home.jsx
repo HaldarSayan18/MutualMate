@@ -3,6 +3,7 @@ import Header2 from '../components/Header2';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { LuSaveAll } from "react-icons/lu";
+import { BASE_URL } from '../components/API';
 
 const Home = () => {
     const [apiData, setApiData] = useState([]);
@@ -31,7 +32,7 @@ const Home = () => {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const currentItems = apiData.slice(startIndex, endIndex);
+    const currentItems = filteredData.slice(startIndex, endIndex);
 
     // fetching data from api / url
     const fetchData = useCallback(async () => {
@@ -48,6 +49,27 @@ const Home = () => {
     useEffect(() => {
         fetchData();
     }, [fetchData]);
+
+    // save-fund handler
+    const handleSave = async (item) => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) {
+            toast.error("Please login first");
+            return;
+        }
+
+        try {
+            await axios.post(`${BASE_URL}/save`, {
+                userId: user._id,
+                fund: item
+            });
+            toast.success("Saved!");
+        } catch (err) {
+            toast.error("Error saving fund");
+            console.error(err);
+        }
+    };
+
 
     return (
         <>
@@ -67,7 +89,7 @@ const Home = () => {
                 {/* search */}
                 <div className="search-container">
                     <input type='search' placeholder='search mutual funds by scheme name or code..' className='search-input' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-                    <button className="search-btn" onChange={handleSearch}>search</button>
+                    <button className="search-btn" onClick={handleSearch}>search</button>
                 </div>
                 {/* table */}
                 <div className="table-container">
@@ -93,7 +115,7 @@ const Home = () => {
                                         <td>{id.schemeName}</td>
                                         <td>{id.isinGrowth}</td>
                                         <td>{id.isinDivReinvestment}</td>
-                                        <td><LuSaveAll style={{ cursor: 'pointer' }} /></td>
+                                        <td><LuSaveAll style={{ cursor: 'pointer' }} onClick={() => handleSave(id)} /></td>
                                     </tr>
                                 ))
                             )}
