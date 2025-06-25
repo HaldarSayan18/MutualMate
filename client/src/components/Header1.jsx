@@ -7,12 +7,14 @@ const Header1 = () => {
     return (
         <div className="login-header">
             <div className="project-name">
-                <h2 style={{
+                <p style={{
                     backgroundImage: 'linear-gradient(to right,rgba(19, 181, 187, 0.61),rgba(172, 46, 221, 0.7))',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
-                    display: 'inline-block'
-                }}>MutualMind</h2>
+                    display: 'inline-block',
+                    fontSize:"1.5rem",
+                    fontWeight:"700"
+                }}>MutualMind</p>
             </div>
             <div className="header1-buttons">
                 <button className="header1-btn" onClick={()=>navigate('/login')}>
