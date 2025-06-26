@@ -28,5 +28,5 @@ const PORT = process.env.PORT || 8050;
 
 // server
 app.listen(PORT, ()=>{
-    console.log(`Server is running on https://mutualmate-server.onrender.com/${PORT}`.bgYellow);
+    console.log(`Server is running on http://localhost:${PORT}`.bgYellow);
 });
