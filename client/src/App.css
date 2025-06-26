@@ -314,6 +314,9 @@ body {
     justify-content: center;
 
     .search-input {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       height: 100%;
       width: 80%;
       padding-left: 1.7rem;
@@ -324,6 +327,9 @@ body {
     }
 
     .search-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background-image: linear-gradient(to right, #20bdbdb2, #c62ae6d0);
       /* -webkit-background-clip: text;
       -webkit-text-fill-color: transparent; */

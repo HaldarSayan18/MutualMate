@@ -1,1 +1,1 @@
-export const BASE_URL = "http://localhost:8050/mutualmate/users";
+export const BASE_URL = "https://mutualmate-server.onrender.com";
