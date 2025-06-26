@@ -1,1 +1,1 @@
-export const BASE_URL = "https://mutualmate-server.onrender.com";
+export const BASE_URL = "https://mutualmate-server.onrender.com/mutualmate/users";
