@@ -10,13 +10,14 @@ const loginController = async (req, res) => {
         if (!user) {
             return res.status(404).send('User not found!')
         };
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
+        const accesstoken = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
             expiresIn: '3d',
         });
+        console.log("user--->", user)
         res.status(200).json({
             success: true,
-            token,
-            user
+            token: accesstoken,
+            user,
         });
     } catch (error) {
         console.log('Login failed!');
@@ -34,7 +35,7 @@ const registerController = async (req, res) => {
         // })
         res.status(201).json({
             success: true,
-            token,
+            // token,
             newUser
         });
     } catch (error) {
@@ -49,12 +50,18 @@ const saveMutualFund = async (req, res) => {
         const { userId, fund } = req.body;
         const user = await userModel.findById(userId);
         if (!user) return res.status(404).json({ error: 'User not found' });
+        // Check if fund already exists by schemeCode
+        const alreadySaved = user.savedItems.find(item => item.schemeCode === fund.schemeCode);
+        if (alreadySaved) {
+            return res.status(400).json({ error: 'Fund already saved' });
+        }
 
         user.savedItems.push(fund);
         await user.save();
 
         res.status(200).json({ success: true, savedItems: user.savedItems });
     } catch (err) {
+        console.log('Failed to save mutual fund',err);
         res.status(500).json({ error: 'Failed to save mutual fund' });
     }
 };
