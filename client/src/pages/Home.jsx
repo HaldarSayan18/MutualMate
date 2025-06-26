@@ -107,6 +107,7 @@ const Home = () => {
                 {/* search */}
                 <div className="search-container">
                     <input type='search' placeholder='search mutual funds by scheme name or code..' className='search-input' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                    <p>SEARCH</p>
                     <button className="search-btn" onClick={handleSearch}>search</button>
                 </div>
                 {/* table */}
