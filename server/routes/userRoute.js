@@ -6,14 +6,14 @@ const auth = require('../middleware/auth');
 const router = express.Router();
 
 // POST || login
-router.post('/login', loginController);
+router.post('/users/login', loginController);
 // POST || register
-router.post('/register', registerController);
+router.post('/users/register', registerController);
 // POST || save funds
-router.post('/save', auth, saveMutualFund);
+router.post('/users/save', auth, saveMutualFund);
 // POST || get saved-funds
-router.get('/save/:userId', auth, getSavedItems);
+router.get('/users/save/:userId', auth, getSavedItems);
 // POST || delete saved-funds
-router.delete('/delete/:userId/:schemeCode', auth, deleteSavedFund);
+router.delete('/users/delete/:userId/:schemeCode', auth, deleteSavedFund);
 
 module.exports = router;
