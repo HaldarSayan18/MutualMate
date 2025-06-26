@@ -1,4 +1,6 @@
+const jwt = require('jsonwebtoken');
 const userModel = require("../model/userModel");
+const generateAccessToken = require("../utils/createToken");
 
 // get login details
 const loginController = async (req, res) => {
@@ -8,12 +10,16 @@ const loginController = async (req, res) => {
         if (!user) {
             return res.status(404).send('User not found!')
         };
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
+            expiresIn: '3d',
+        });
         res.status(200).json({
             success: true,
+            token,
             user
         });
     } catch (error) {
-        console.log('Error in fetching login credentials.');
+        console.log('Login failed!');
         console.log(error);
     }
 };
@@ -23,13 +29,17 @@ const registerController = async (req, res) => {
     try {
         const newUser = new userModel(req.body);
         await newUser.save();
+        // const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET_KEY, {
+        //     expiresIn:"7d",
+        // })
         res.status(201).json({
             success: true,
+            token,
             newUser
         });
     } catch (error) {
-        console.log('Error occurs in registration.');
-        console.log(error);
+        console.log('Registration failed!', error);
+        res.status(500).json({ error: "Registration failed!" });
     }
 };
 
@@ -62,4 +72,22 @@ const getSavedItems = async (req, res) => {
     }
 };
 
-module.exports = { loginController, registerController, saveMutualFund, getSavedItems };
+// Delete save items
+const deleteSavedFund = async (req, res) => {
+    try {
+        const { userId, schemeCode } = req.params;
+        const user = await userModel.findById(userId);
+        if (!user) return res.status(404).json({ error: 'User not found' });
+
+        // Remove fund by schemeCode
+        user.savedItems = user.savedItems.filter(item => item.schemeCode !== schemeCode);
+        await user.save();
+
+        res.status(200).json({ success: true, savedItems: user.savedItems });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to delete mutual fund' });
+    }
+};
+
+
+module.exports = { loginController, registerController, saveMutualFund, getSavedItems, deleteSavedFund };
