@@ -10,7 +10,7 @@ const Header2 = () => {
     // logout handler
     const handleLogout = () => {
         localStorage.removeItem('user');
-        toast.warning("Logging out successfully", {
+        toast.warning("Logging out!", {
             position:"top-center",
             onClose: () => navigate('/login')
         });
@@ -32,7 +32,7 @@ const Header2 = () => {
                 <button type='button' className="header2-btn" id='profile-btn' onClick={() => navigate('/')}>
                     Hi {user.user.fullname || "User"}
                 </button>
-                <button className="header2-btn" onClick={() => navigate('/save')}>
+                <button className="header2-btn" onClick={() => navigate(`/save/${user.user._id}`)}>
                     Saved
                 </button>
                 <button className="header2-btn" id='profile-btn' onClick={handleLogout}>

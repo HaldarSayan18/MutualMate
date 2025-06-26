@@ -22,25 +22,31 @@ const Register = () => {
         };
         const { password, confirmPassword } = values;
         if (password !== confirmPassword) {
-            toast.error("password mismatched!")
+            toast.error("password mismatched!", {
+                position: "top-center"
+            });
             return
         };
         try {
-            await axios.post(`${BASE_URL}/register`, values, {
+            const { data } = await axios.post(`${BASE_URL}/register`, values, {
                 headers: { "Content-Type": "application/json" }
             });
-            toast.success("Registration Successfull!")
-            navigate("/login");
+            toast.success("Registration Successfull!", {
+                position: "top-center",
+                onClose: () => navigate('/login')
+            });
+            // Store token and user
+            // localStorage.setItem("token", data.token);
+            // localStorage.setItem("user", JSON.stringify({ ...data.user, password: "" }));
         } catch (error) {
             toast.error("Check your data properly.")
             console.log("Error during registration - ", error);
         }
-        console.log('form-values==>', values);
     };
 
     // prevent for logged in user
-    useEffect(()=>{
-        if(localStorage.getItem("user")){
+    useEffect(() => {
+        if (localStorage.getItem("user")) {
             navigate("/login")
         }
     }, [navigate]);

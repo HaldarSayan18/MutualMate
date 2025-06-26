@@ -11,10 +11,12 @@ body {
 
 /* header1 style */
 .login-header {
+  height: 10vh;
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 55rem;
   padding: 18px;
   background-color: #ffffff96;
   box-shadow: 0px 5px 5px rgba(71, 71, 71, 0.685);
@@ -89,7 +91,7 @@ body {
   gap: 1rem;
   /* border: 1px solid black; */
   max-width: 25rem;
-  height: 25rem;
+  height: 30rem;
   padding: 0.5rem;
   border-radius: 1rem;
   box-shadow: 2px 5px 10px 0px rgba(0, 0, 0, 0.76);
@@ -162,10 +164,10 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-left: 22rem;
-  margin-right: 22rem;
+  margin-left: 25rem;
+  margin-right: 25rem;
   margin-top: 2rem;
-  gap: 2rem;
+  gap: 1rem;
   /* border: 1px solid black; */
   width: auto;
   height: auto;
@@ -352,10 +354,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 5%;
-  width: auto;
+  margin-top: 2vh;
+  width: 100%;
   text-align: center;
-  padding: 15px;
+  padding: 7px;
   color: rgb(226, 43, 83);
   background-color: rgba(216, 219, 219, 0.548);
   box-shadow: 0px 0px 10px 1px rgba(71, 71, 71, 0.685);

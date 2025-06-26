@@ -9,6 +9,7 @@ import axios from 'axios';
 
 const Login = () => {
     const navigate = useNavigate();
+    // login form handler
     const handleLogin = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -24,6 +25,7 @@ const Login = () => {
                 pauseOnHover: false,
                 onClose: () => navigate('/'),
             });
+            localStorage.setItem("token", data.token);
             localStorage.setItem('user', JSON.stringify({ ...data, password: "" }));
         } catch (error) {
             toast.error("Invalid credentials. Please try again.", {

@@ -4,10 +4,14 @@ import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { LuSaveAll } from "react-icons/lu";
 import { BASE_URL } from '../components/API';
+import { useNavigate } from 'react-router-dom';
+import Header1 from '../components/Header1';
 
 const Home = () => {
+    const navigate = useNavigate();
     const [apiData, setApiData] = useState([]);
-
+    // fetch user from localstorage
+    const user = JSON.parse(localStorage.getItem('user'));
     // search filter
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredData, setFilteredData] = useState([]);
@@ -38,7 +42,7 @@ const Home = () => {
     const fetchData = useCallback(async () => {
         try {
             const response = await axios.get('https://api.mfapi.in/mf');
-            console.log('response.data===>', response.data);
+            // console.log('response.data===>', response.data);
             setApiData(response.data);
             setFilteredData(response.data);
         } catch (error) {
@@ -53,17 +57,28 @@ const Home = () => {
     // save-fund handler
     const handleSave = async (item) => {
         const user = JSON.parse(localStorage.getItem('user'));
+        const token = localStorage.getItem("token");
         if (!user) {
-            toast.error("Please login first");
+            toast.error("Please login first", {
+                position: "top-center",
+                onClose: () => navigate('/login')
+            });
             return;
         }
 
         try {
             await axios.post(`${BASE_URL}/save`, {
-                userId: user._id,
+                userId: user.user._id,
                 fund: item
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             });
-            toast.success("Saved!");
+            toast.success("Saved!", {
+                autoClose: 2500,
+                position: "top-center"
+            });
         } catch (err) {
             toast.error("Error saving fund");
             console.error(err);
@@ -73,7 +88,7 @@ const Home = () => {
 
     return (
         <>
-            <Header2 />
+            {user ? <Header2 /> : <Header1 />}
             <ToastContainer />
             {/* main-heading */}
             <div className='home-container'>
