@@ -68,7 +68,7 @@ const Home = () => {
 
         try {
             await axios.post(`${BASE_URL}/save`, {
-                userId: user.user._id,
+                userId: user._id,
                 fund: item
             }, {
                 headers: {
@@ -80,7 +80,10 @@ const Home = () => {
                 position: "top-center"
             });
         } catch (err) {
-            toast.error("Error saving fund");
+            toast.error("Error in saving fund", {
+                autoClose: 2500,
+                position: "top-center"
+            });
             console.error(err);
         }
     };

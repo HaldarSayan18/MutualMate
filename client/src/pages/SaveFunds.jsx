@@ -12,8 +12,20 @@ const SavedFunds = () => {
 
     // dlt handler
     const handleDlt = async (fund) => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            toast.error("Unauthorized: Please log in again", {
+                autoClose: 2500,
+                position: "top-center"
+            });
+            return;
+        }
         try {
-            await axios.delete(`${BASE_URL}/delete/${userId}/${fund.schemeCode}`);
+            await axios.delete(`${BASE_URL}/delete/${userId}/${fund.schemeCode}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             setSavedFunds(prev => prev.filter(item => item.schemeCode !== fund.schemeCode));
             toast.error('Item deleted.', {
                 autoClose: 2500,
@@ -24,20 +36,26 @@ const SavedFunds = () => {
         }
     };
 
+    const fetchSavedFunds = async () => {
+        // const user = JSON.parse(localStorage.getItem('user'));
+        const token = localStorage.getItem("token");
+        const res = await axios.get(`${BASE_URL}/save/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        setSavedFunds(res.data.savedItems);
+    };
+    console.log("userID savefund==", userId)
     useEffect(() => {
-        const fetchSavedFunds = async () => {
-            // const user = JSON.parse(localStorage.getItem('user'));
-            const res = await axios.get(`${BASE_URL}/save/${userId}`);
-            setSavedFunds(res.data.savedItems);
-        };
         fetchSavedFunds();
-    });
+    }, []);
 
     return (
         <>
             <Header2 />
-            <div>
-                <h2>Your Saved Mutual Funds</h2>
+            <center>
+                <h2 className='center'>Your Saved Mutual Funds</h2>
                 <table className="table table-striped">
                     <thead>
                         <tr>
@@ -54,8 +72,8 @@ const SavedFunds = () => {
                                 <td colSpan="6" style={{ textAlign: 'center' }}>No data available</td>
                             </tr>
                         ) : (
-                            savedFunds.map((fund, index) => (
-                                <tr key={index}>
+                            savedFunds.map((fund, fundId) => (
+                                <tr key={fundId}>
                                     <td>{fund.schemeCode}</td>
                                     <td>{fund.schemeName}</td>
                                     <td>{fund.isinGrowth}</td>
@@ -66,7 +84,7 @@ const SavedFunds = () => {
                         )}
                     </tbody>
                 </table>
-            </div>
+            </center>
         </>
     );
 };

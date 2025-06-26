@@ -28,18 +28,22 @@ const Register = () => {
             return
         };
         try {
-            const { data } = await axios.post(`${BASE_URL}/register`, values, {
+            await axios.post(`${BASE_URL}/register`, values, {
                 headers: { "Content-Type": "application/json" }
             });
             toast.success("Registration Successfull!", {
                 position: "top-center",
                 onClose: () => navigate('/login')
             });
+            console.log("reg values==>",values)
             // Store token and user
             // localStorage.setItem("token", data.token);
             // localStorage.setItem("user", JSON.stringify({ ...data.user, password: "" }));
         } catch (error) {
-            toast.error("Check your data properly.")
+            toast.error("Check your data properly.", {
+                autoClose:2000,
+                position:"top-center"
+            });
             console.log("Error during registration - ", error);
         }
     };
@@ -54,7 +58,7 @@ const Register = () => {
     return (
         <>
             <Header1 />
-            <ToastContainer autoClose={2000} position="top-center" pauseOnHover={false} />
+            <ToastContainer/>
             <div className="register-page">
                 <h2 className='welcome'>New Registration</h2>
                 <form className="register-form" method='post' onSubmit={handleRegistration}>

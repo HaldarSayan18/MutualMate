@@ -19,6 +19,7 @@ const Login = () => {
         };
         try {
             const { data } = await axios.post(`${BASE_URL}/login`, values);
+            console.log('login values==',values)
             toast.success("Logged in Successfully!", {
                 // autoClose: 2000,
                 position: "top-center",
@@ -26,7 +27,8 @@ const Login = () => {
                 onClose: () => navigate('/'),
             });
             localStorage.setItem("token", data.token);
-            localStorage.setItem('user', JSON.stringify({ ...data, password: "" }));
+            console.log("saved token===", data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
         } catch (error) {
             toast.error("Invalid credentials. Please try again.", {
                 position: "top-center"
