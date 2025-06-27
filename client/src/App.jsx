@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import Register from './pages/Register';
 import Home from './pages/Home';
 import SavedFunds from './pages/SaveFunds';
+import FundDetails from './pages/FundDetails';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route path='/save/:userId' element={<SavedFunds />} />
+        <Route path="/fund-details/:schemeCode" element={<FundDetails />} />
         <Route path='/' element={<Home />} />
         {/* <Route path='/' element={<ProtectedRoutes>
           <Home />

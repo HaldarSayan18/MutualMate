@@ -3,13 +3,14 @@ import Header2 from '../components/Header2';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { LuSaveAll } from "react-icons/lu";
-import { BASE_URL } from '../components/API';
-import { useNavigate } from 'react-router-dom';
+import { BASE_URL, MF_API } from '../components/API';
+import { Link, useNavigate } from 'react-router-dom';
 import Header1 from '../components/Header1';
 
 const Home = () => {
     const navigate = useNavigate();
     const [apiData, setApiData] = useState([]);
+    const [loading, setLoading] = useState(true);
     // fetch user from localstorage
     const user = JSON.parse(localStorage.getItem('user'));
     // search filter
@@ -29,6 +30,10 @@ const Home = () => {
         setFilteredData(result);
     };
 
+    useEffect(() => {
+        handleSearch();
+    }, [searchTerm, apiData]);
+
     // pagination
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 50;
@@ -41,13 +46,15 @@ const Home = () => {
     // fetching data from api / url
     const fetchData = useCallback(async () => {
         try {
-            const response = await axios.get('https://api.mfapi.in/mf');
+            const response = await axios.get(`${MF_API}`);
             // console.log('response.data===>', response.data);
             setApiData(response.data);
             setFilteredData(response.data);
         } catch (error) {
             toast.error("Error in fetching data");
             console.log("Error in fetching data===> ", error);
+        } finally {
+            setLoading(false);
         }
     }, []);
     useEffect(() => {
@@ -105,10 +112,10 @@ const Home = () => {
                     <p>Make informed decisions with real-time data and insights.</p>
                 </div>
                 {/* search */}
-                <div className="search-container">
-                    <input type='search' placeholder='search mutual funds by scheme name or code..' className='search-input' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-                    <button className="search-btn" onClick={handleSearch}>search</button>
-                </div>
+                {/* <div className="search-container"> */}
+                <input type='search' placeholder='search mutual funds by scheme name or code..' className='search-input' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                {/* <button className="search-btn" onClick={handleSearch}>search</button> */}
+                {/* </div> */}
                 {/* table */}
                 <div className="table-container">
                     <table className="table table-striped">
@@ -121,23 +128,35 @@ const Home = () => {
                                 <th scope='col'>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {currentItems.length === 0 ? (
-                                <tr>
-                                    <td colSpan="6" style={{ textAlign: 'center' }}>No data available</td>
-                                </tr>
-                            ) : (
-                                currentItems.map((id, index) => (
-                                    <tr key={index}>
-                                        <td>{id.schemeCode}</td>
-                                        <td>{id.schemeName}</td>
-                                        <td>{id.isinGrowth}</td>
-                                        <td>{id.isinDivReinvestment}</td>
-                                        <td><LuSaveAll style={{ cursor: 'pointer' }} onClick={() => handleSave(id)} /></td>
+                        {loading ? (
+                            <tr>
+                                <td colSpan="6" style={{ textAlign: 'center', padding: '1rem' }}>
+                                    <h6>Loading table data...</h6>
+                                </td>
+                            </tr>
+                        ) : (
+                            <tbody>
+                                {currentItems.length === 0 ? (
+                                    <tr>
+                                        <td colSpan="6" style={{ textAlign: 'center' }}>No data available</td>
                                     </tr>
-                                ))
-                            )}
-                        </tbody>
+                                ) : (
+                                    currentItems.map((id, index) => (
+                                        <tr key={index}>
+                                            <td>{id.schemeCode}</td>
+                                            <td>
+                                                <Link to={`/fund-details/${id.schemeCode}`} style={{ color: 'black  ', cursor: 'pointer', textDecoration: "none" }}>
+                                                    {id.schemeName}
+                                                </Link>
+                                            </td>
+                                            <td>{id.isinGrowth}</td>
+                                            <td>{id.isinDivReinvestment}</td>
+                                            <td><LuSaveAll style={{ cursor: 'pointer' }} onClick={() => handleSave(id)} /></td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        )}
                     </table>
                 </div>
                 {/* pagination */}
